@@ -1,8 +1,9 @@
-# Rukavice-na-mereni-tepu
-Cílem mého arduino projektu je vytvořit wearable rukavici která bude měřit tep, zobrazovat jej na segmentovém dipleji.
+# EKG pristroj
+Cílem mého arduino projektu je vytvořit přístroj k měření EKG pomocí ESP8266 modulu. Přístroj bude informace posílat na server cloud a zobrazovat data ve grafu.
+EKG bude měřeno pomocí 3 přísavek přisátých na těle pacienta.
+
 
 Části:
-1. Arduino LilyPad (zvoleno pro kompaktní velikost, ukotvení na rukavici)
-2. Segmentový displej
-3. Sensor k měření pulzu
-4. Zdroj, kabeláž, rukavice
+1. AD8232 EKG Sensor
+2. ESP8266-12E Modul
+3. Kabeláž
