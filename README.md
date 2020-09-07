@@ -1,5 +1,5 @@
 # Rukavice-na-mereni-tepu
-Cílem mého arduino projektu je vytvořit wearable rukavici která bude měřit tep, zobrazovat jej na segmentovém dipleji a následně data posílat na cloud server.
+Cílem mého arduino projektu je vytvořit wearable rukavici která bude měřit tep, zobrazovat jej na segmentovém dipleji.
 
 Části:
 1. Arduino LilyPad (zvoleno pro kompaktní velikost, ukotvení na rukavici)
