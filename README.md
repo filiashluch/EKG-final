@@ -1,5 +1,5 @@
 # EKG pristroj
-Cílem mého arduino projektu je vytvořit přístroj k měření EKG pomocí ESP8266 modulu. Přístroj bude informace posílat na server cloud a zobrazovat data ve grafu.
+Cílem mého arduino projektu je vytvořit přístroj k měření EKG pomocí ESP8266 modulu. Přístroj bude informace posílat na cloud a zobrazovat data ve grafu.
 EKG bude měřeno pomocí 3 přísavek přisátých na těle pacienta.
 
 
