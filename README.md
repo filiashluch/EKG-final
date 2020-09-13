@@ -1,4 +1,4 @@
-# EKG přístroj
+# Přístroj na měrení stavu pacienta
 Cílem mého projektu je vytvořit přístroj k měření teploty a vlhkosti v místnosti plus teplotu, tep a uroveň kyslíku v krvi pacienta. Přístroj bude informace posílat na server a přehledně zobrazovat.
 
 Části:
