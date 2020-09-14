@@ -10,7 +10,8 @@ Součástky:
 
 Inspirace:
 -https://circuitdigest.com/microcontroller-projects/iot-based-patient-monitoring-system-using-esp8266-and-arduino
--https://www.projectsof8051.com/arduino-and-iot-based-patient-health-monitoring-system-project/
+
+https://www.projectsof8051.com/arduino-and-iot-based-patient-health-monitoring-system-project/
 
 Pracovní plán:
  -cca 15.10 - Čekání na součástky(není určeno kdy dorazí), začátek psaní kódu a MQTT serveru
