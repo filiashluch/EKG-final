@@ -3,7 +3,7 @@ Cílem mého projektu je vytvořit přístroj k měření teploty a vlhkosti v m
 
 Součástky:
 1. ESP32
-2. MAX30100 Čidlo pluzu a kyslíku v krvi
+2. MAX30100 Čidlo pulzu a kyslíku v krvi
 3. DS18B20, LM35 Teplotní čidla, zvoleno digitální i analogové z důvodů zkoušky a porovnání přesnosti a případně 1 náhradního dílu
 -https://www.digikey.cz/en/blog/types-of-temperature-sensors
 4. DHT11 Čidlo vlhkosti vzduchu
