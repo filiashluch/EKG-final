@@ -15,5 +15,5 @@ https://www.projectsof8051.com/arduino-and-iot-based-patient-health-monitoring-s
 
 Pracovní plán:
  -cca 15.10 - Čekání na součástky(není určeno kdy dorazí), začátek psaní kódu a MQTT serveru
- 15.10-31.10 - Sestavování obvodu a spojení s MQTT serverem
+ 15.10-31.10 - Sestavování obvodu a spojení s MQTT serverem, tvorba prezentace, dokumentace
  1.11-neurčito - Dokončování projektu 
