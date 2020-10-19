@@ -29,7 +29,7 @@ void loop() {
   ptr +="body{margin: 0px;} ";
   ptr +="h1 {margin: 50px auto 30px;} ";
   ptr +=".side-by-side{display: table-cell;vertical-align: middle;position: relative;}";
-  ptr +=".text{font-weight: 600;font-size: 19px;width: 200px;}";
+  ptr +=".text{font-weight: 600;font-size: 20px;width: 200px;}";
   ptr +=".reading{font-weight: 300;font-size: 50px;padding-right: 25px;}";
   ptr +=".teplota .reading{color: #F29C1F;}";
   ptr +=".vlhkost .reading{color: #3B97D3;}";
