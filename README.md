@@ -6,7 +6,7 @@ Součástky:
 2. MAX30100 Čidlo pulzu a kyslíku v krvi
 3. DS18B20, LM35 Teplotní čidla, zvoleno digitální i analogové z důvodů zkoušky a porovnání přesnosti a případně 1 náhradního dílu
 -https://www.digikey.cz/en/blog/types-of-temperature-sensors
-4. DHT11 Čidlo vlhkosti vzduchu
+4. DHT11 Čidlo vlhkosti vzduchu ✔
 
 Inspirace:
 -https://circuitdigest.com/microcontroller-projects/iot-based-patient-monitoring-system-using-esp8266-and-arduino
