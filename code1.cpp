@@ -6,22 +6,21 @@
 #include <DallasTemperature.h>
 #include <dht.h>
  
-#define DHTTYPE DHT11
-#define DHTPIN 18
+#define DHT11_PIN 18
 #define DS18B20 5
 #define REPORTING_PERIOD_MS     1000
  
+float temperature, humidity, BPM, SpO2, bodytemperature;
 
 const char* ssid = "filias";
 const char* password = "123456789";
  
-DHT dht(DHTPIN, DHTTYPE);
+dht DHT;
 PulseOximeter pox;
 uint32_t tsLastReport = 0;
 OneWire oneWire(DS18B20);
 DallasTemperature sensors(&oneWire);
  
-float temperature, humidity, BPM, SpO2, bodytemperature;
  
 WebServer server(80);             
  
