@@ -1,11 +1,12 @@
 #include <WiFi.h> 
 #include <WebServer.h>
+#include <stdint.h>
 #include <Wire.h>
 #include "MAX30100_PulseOximeter.h"
 #include <Arduino.h>
 #include "OneWire.h"
 #include <DallasTemperature.h>
-#include "DHT.h"
+#include <DHT.h>
  
 #define DHTPIN 15
 #define DHTTYPE DHT11
@@ -47,10 +48,9 @@ void setup() {
   }
   Serial.println("");
   Serial.println("WiFi pripojena");
-  Serial.print("IP: ");  Serial.println(WiFi.localIP());
+  Serial.print("IP: ");  
+  Serial.println(WiFi.localIP());
  
-  /*server.on("/", handle_OnConnect);
-  server.onNotFound(handle_NotFound);*/
  
   server.begin();
   Serial.println("HTTP server start");
