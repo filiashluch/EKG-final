@@ -7,17 +7,17 @@
 #include <DallasTemperature.h>
 #include "DHT.h"
  
-#define DHTPIN 15
+#define DHTPIN 18
 #define DHTTYPE DHT11
 #define DS18B20 5
 #define REPORTING_PERIOD_MS     1000
  
-float temperature, humidity, BPM, SpO2, bodytemperature;
+float t, h, BPM, SpO2, bodytemperature;
 
 const char* ssid = "filias";
 const char* password = "123456789";
  
-DHT dht(DHTPIN, DHTTYPE);
+DHT dht;
 PulseOximeter pox;
 uint32_t tsLastReport = 0;
 OneWire oneWire(DS18B20);
@@ -73,9 +73,10 @@ void loop() {
   server.handleClient();
   pox.update();
   sensors.requestTemperatures();
-  int chk = dht.read11(DHTPIN);
-  temperature = dht.readTemperature();;
-  humidity =  dht.readHumidity();;
+  int chk = dht.read(DHTPIN);
+  
+  t = dht.readTemperature();
+  h =  dht.readHumidity();;
   BPM = pox.getHeartRate();
   SpO2 = pox.getSpO2();
   bodytemperature = sensors.getTempCByIndex(0);
@@ -84,11 +85,11 @@ void loop() {
  if (millis() - tsLastReport > REPORTING_PERIOD_MS) 
   {
     Serial.print("Teplota v mistnosti: ");
-    Serial.print(temperature);
+    Serial.print(dht.t);
     Serial.println("°C");
     
     Serial.print("Vlhkost v mistnosti: ");
-    Serial.print(humidity);
+    Serial.print(dht.h);
     Serial.println("%");
     
     Serial.print("BPM: ");

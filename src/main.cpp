@@ -10,12 +10,12 @@
 #define DHTPIN 15
 #define DHTTYPE DHT11
 #define DS18B20 5
-#define REPORTING_PERIOD_MS     1000
+#define OPAK_REPORT     1000
  
 float temperature, humidity, BPM, SpO2, bodytemperature;
 
 const char* ssid = "filias";
-const char* password = "123456789";
+const char* password = "tp159net";
  
 DHT dht(DHTPIN, DHTTYPE);
 PulseOximeter pox;
@@ -73,7 +73,7 @@ void loop() {
   server.handleClient();
   pox.update();
   sensors.requestTemperatures();
-  int chk = dht.read11(DHTPIN);
+  
   temperature = dht.readTemperature();;
   humidity =  dht.readHumidity();;
   BPM = pox.getHeartRate();
@@ -81,7 +81,7 @@ void loop() {
   bodytemperature = sensors.getTempCByIndex(0);
  
   
- if (millis() - tsLastReport > REPORTING_PERIOD_MS) 
+ if (millis() - tsLastReport > OPAK_REPORT) 
   {
     Serial.print("Teplota v mistnosti: ");
     Serial.print(temperature);
