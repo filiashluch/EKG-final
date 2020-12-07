@@ -1,7 +1,7 @@
-#include <WiFi.h>
-#include <WiFiClientSecure.h>
-#include <WebServer.h>
 #include <stdint.h>
+#include <WiFi.h>
+#include <ESPAsyncWebServer.h>
+#include <ESPAsyncTCP.h>
 #include <Wire.h>
 #include "MAX30100_PulseOximeter.h"
 #include <Arduino.h>
@@ -16,15 +16,8 @@
 
 float temperature, humidity, BPM, SpO2, bodytemperature;
 
-const char *ssid = "HL1";
-const char *password = "tp159net";
-
-IPAddress ip(192, 168, 1, 90);
-IPAddress gateway(192, 168, 1, 1);
-IPAddress dns(192, 168, 1, 1);
-IPAddress subnet(255,255,255,0);
-IPAddress dns1 = (uint32_t)0x00000000;
-IPAddress dns2 = (uint32_t)0x00000000;
+const char *ssid = "Filias";
+const char *password = "00000000";
 
 DHT dht(DHTPIN, DHTTYPE);
 PulseOximeter pox;
@@ -32,145 +25,99 @@ uint32_t tsLastReport = 0;
 OneWire oneWire(DS18B20);
 DallasTemperature sensors(&oneWire);
 
-WebServer server(80);
+AsyncWebServer server(80);
 
 void onBeatDetected()
 {
   Serial.println("Tep detekovan");
 }
 
-void handle_OnConnect(){
-  String SendHTML(float temperature,float humidity,float BPM,float SpO2, float bodytemperature);
-  server.send(200, "text/html", SendHTML(temperature, humidity, BPM, SpO2, bodytemperature));
-}
-
-void handle_NotFound(){
-  server.send(404, "text/plain", "Not found");
-}
-
-/*AsyncWebServer server(80);
-
-String readDHTTemperature() {
-  // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
-  // Read temperature as Celsius (the default)
-  float t = dht.readTemperature();
-  // Read temperature as Fahrenheit (isFahrenheit = true)
-  //float t = dht.readTemperature(true);
-  // Check if any reads failed and exit early (to try again).
-  if (isnan(t)) {    
-    Serial.println("Failed to read from DHT sensor!");
-    return "--";
-  }
-  else {
-    Serial.println(t);
-    return String(t);
-  }
-}
-
-String readDHTHumidity() {
-  // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
-  float h = dht.readHumidity();
-  if (isnan(h)) {
-    Serial.println("Failed to read from DHT sensor!");
-    return "--";
-  }
-  else {
-    Serial.println(h);
-    return String(h);
-  }
-}
-
-String processor(const String& var){
-  //Serial.println(var);
-  if(var == "TEMPERATURE"){
-    return readDHTTemperature();
-  }
-  else if(var == "HUMIDITY"){
-    return readDHTHumidity();
-  }
-  return String();
-}
-
-void setup(){
-  // Serial port for debugging purposes
-  Serial.begin(115200);
-
-  dht.begin();
-  
-  // Connect to Wi-Fi
-  WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(1000);
-    Serial.println("Connecting to WiFi..");
-  }
-
-  // Print ESP32 Local IP Address
-  Serial.println(WiFi.localIP());
-
-  // Route for root / web page
-  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send_P(200, "text/html", index_html, processor);
-  });
-  server.on("/temperature", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send_P(200, "text/plain", readDHTTemperature().c_str());
-  });
-  server.on("/humidity", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send_P(200, "text/plain", readDHTHumidity().c_str());
-  });
-
-  // Start server
-  server.begin();
-}
- 
-void loop(){
-  
-}
-*/
 void setup()
 {
   Serial.begin(115200);
-  pinMode(19, OUTPUT);
-  delay(100);
-
-  WiFi.mode(WIFI_STA);
-  Serial.println();
-  Serial.print("Connecting to ");
+  Serial.print("Pripojovani k ");
   Serial.println(ssid);
-  WiFi.begin(ssid, password);  
-  while (WiFi.status() != WL_CONNECTED) {
-    Serial.print(".");
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED)
+  {
     delay(500);
+    Serial.print(".");
   }
-  Serial.println();
-  Serial.print("ESP IP Address: ");
+
+  if (!SPIFFS.begin())
+  {
+    Serial.println("An Error has occurred while mounting SPIFFS");
+    return;
+  }
+
   Serial.println(WiFi.localIP());
 
-  Serial.print("Inicialnizace detektoru pulzu/kysliku");
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send(SPIFFS, "/index.html", String());
+  });
 
-  if (!pox.begin())
-  {
-    Serial.println("ERROR");
-    for (;;)
-      ;
-  }
-  else
-  {
-    Serial.println("SUCCESS");
-    pox.setOnBeatDetectedCallback(onBeatDetected);
-  }
+  server.on("/style.css", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send(SPIFFS, "/css/style.css", String());
+  });
 
-  pox.setIRLedCurrent(MAX30100_LED_CURR_7_6MA);
+  server.on("/index.js", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send(SPIFFS, "/js/index.js", String());
+  });
+
+  server.on("/BPM", HTTP_POST, [](AsyncWebServerRequest *request) {
+    request->send(200, "text/json", "{\"result\":\"ok\"}");
+  });
+
+  server.on("/tep", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send_P(200, "text/plain", getHeartRate().c_str());
+  });
+
+  server.on("/SP02", HTTP_POST, [](AsyncWebServerRequest *request) {
+    request->send(200, "text/json", "{\"result\":\"ok\"}");
+  });
+
+  server.on("/kyslik", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send_P(200, "text/plain", getSpO2().c_str());
+  });
+
+  server.on("/bodytemperature", HTTP_POST, [](AsyncWebServerRequest *request) {
+    request->send(200, "text/json", "{\"result\":\"ok\"}");
+  });
+
+  server.on("/teplotatela", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send_P(200, "text/plain", getTempCByIndex(0).c_str());
+  });
+
+  server.on("/temperature", HTTP_POST, [](AsyncWebServerRequest *request) {
+    request->send(200, "text/json", "{\"result\":\"ok\"}");
+  });
+
+  server.on("/teplota", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send_P(200, "text/plain", getTemperature().c_str());
+  });
+
+  server.on("/humidity", HTTP_POST, [](AsyncWebServerRequest *request) {
+    request->send(200, "text/json", "{\"result\":\"ok\"}");
+  });
+
+  server.on("/vlhkost", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send_P(200, "text/plain", getHumidity().c_str());
+  });
+
+  dht.begin();
+  pox.begin();
+  server.begin();
 }
+
 void loop()
 {
   server.handleClient();
   pox.update();
+  dht.update();
   sensors.requestTemperatures();
 
-  temperature = dht.readTemperature();
-  ;
-  humidity = dht.readHumidity();
-  ;
+  teplotavalue = dht.readTemperature();
+  vlhkostvalue = dht.readHumidity();
   BPM = pox.getHeartRate();
   SpO2 = pox.getSpO2();
   bodytemperature = sensors.getTempCByIndex(0);
@@ -201,10 +148,10 @@ void loop()
 
     tsLastReport = millis();
   }
-
 }
 
-  String SendHTML(float temperature,float humidity,float BPM,float SpO2, float bodytemperature){
+String SendHTML(float temperature, float humidity, float BPM, float SpO2, float bodytemperature)
+{
   String ptr = "<!DOCTYPE html>";
   ptr += "<html>";
   ptr += "<head>";
